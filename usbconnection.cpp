@@ -1,12 +1,14 @@
 #include "usbconnection.h"
 
 usbConnection::usbConnection(QWidget *parent){
-    parentWidget=parent;
-    currentPort=nullptr;
+    parentWidget = parent;
+    currentPort = nullptr;
+    programPointer = nullptr;
+    runing = false;
+    programCounter = 0;
 
     connect(&statusTimer,SIGNAL(timeout()),this,SLOT(requestTime()));
     connect(&waitTimer,SIGNAL(timeout()),this,SLOT(waitTimeSlot()));
-
 
 }
 /////////////////////////////////////////////////////////////////////////
@@ -100,6 +102,22 @@ bool usbConnection::isConnected(){
     }
     return false;
 }
+///////////////////////////////////////////////////////////////////////////////////////
+void usbConnection::runProgram(QStringList *program){
+    programPointer = program;
+    runing = true;
+    sendNextComand();
+}
+//////////////////////////////////////////////////////////////////////////////////
+void usbConnection::stopProgram(){
+    runing = false;
+    programPointer = nullptr;
+    programCounter = 0;
+}
+//////////////////////////////////////////////////////////////////////////////////////
+void usbConnection::pauseProgram(){
+    runing = false;
+}
 /////////////////////////////////////////////////////////////////////////////////
 void usbConnection::deleteCurrentPort(){
     if(currentPort!=nullptr){
@@ -150,6 +168,10 @@ void usbConnection::decodePacket(){
             emit connectedSignal(status);
             break;
         }
+        case(MESSAGE_ACKNOWLEDGE):{
+            sendNextComand();
+            break;
+        }
         default:{
 
         }
@@ -168,7 +190,20 @@ bool usbConnection::openPortFromFile(){
 }
 /////////////////////////////////////////////////////////////////////////////
 bool usbConnection::writeCurrentPortInFile(){
-
+    //todo
+}
+//////////////////////////////////////////////////////////////////////////////////
+void usbConnection::sendNextComand(){
+    if(runing){
+        if(programCounter < programPointer->size()){
+            sendGCode(programPointer->at(programCounter));
+            programCounter++;
+        }
+        else{
+            programCounter = 0;
+            runing = false;
+        }
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////////
 void usbConnection::portError(QSerialPort::SerialPortError error){
@@ -216,6 +251,8 @@ void usbConnection::dataReadyRead(){
 void usbConnection::waitTimeSlot(){
     waitTimer.stop();
     statusTimer.stop();
+    programCounter = 0;
+    runing = false;
     message(tr("Превышен интервал ожидания ответа от устройства. \n"
                "USB соединение в порядке, но устройство не отвечает."));
     emit disconnectedSignal();

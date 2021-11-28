@@ -25,13 +25,14 @@ protected slots:
     void connectedSlot(plotterStatus status);
     void disconnectedSlot();
     void sendGCode(QString gCode);
+    void sendProgramm(QStringList *program);
     void openSlot();
     void penChangeSlot();
     void zChangeSlot();
     void fChangeSlot();
     void executeSlot();
     void updateViewSlot();
-    void errorSlot(QString error);
+    void errorSlot(QString error, QString title = NULL);
 
 protected:
     usbConnection *USBPort;

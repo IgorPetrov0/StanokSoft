@@ -9,11 +9,13 @@
 #include <QFile>
 #include <QApplication>
 #include "widgets/serialportsdialog.h"
+#include "drawcommand.h"
 
 
 enum messageType{
     MESSAGE_STATUS,
-    MESSAGE_G_CODE
+    MESSAGE_G_CODE,
+    MESSAGE_ACKNOWLEDGE
 };
 
 struct plotterStatus{
@@ -37,10 +39,13 @@ public:
     void sendGCode(QString gCode);
     void writeArray(QByteArray *array);
     bool isConnected();
+    void runProgram(QStringList *program);
+    void stopProgram();
+    void pauseProgram();
+
 signals:
     void connectedSignal(plotterStatus status);
     void disconnectedSignal();
-
 
 protected:
     QWidget *parentWidget;
@@ -48,6 +53,9 @@ protected:
     QTimer statusTimer;
     QTimer waitTimer;
     QByteArray inputBuffer;
+    QStringList *programPointer;
+    bool runing;
+    int programCounter;
 
     void deleteCurrentPort();
     void message(QString text);
@@ -55,13 +63,13 @@ protected:
     void decodePacket();
     bool openPortFromFile();
     bool writeCurrentPortInFile();
+    void sendNextComand();
 
 protected slots:
     void portError(QSerialPort::SerialPortError error);
     void requestTime();
     void dataReadyRead();
     void waitTimeSlot();
-
 
 };
 

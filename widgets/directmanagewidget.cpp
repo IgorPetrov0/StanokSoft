@@ -7,8 +7,26 @@ directManageWidget::directManageWidget(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    ui->Xm01Button->setGCode("G00 X-0.1 F2\n");
+    ui->Xm1Button->setGCode("G00 X-1 F2\n");
+    ui->Xm10Button->setGCode("G00 X-10 F2\n");
+    ui->Xp01Button->setGCode("G00 X0.1 F2\n");
+    ui->Xp1Button->setGCode("G00 X1 F2\n");
+    ui->Xp10Button->setGCode("G00 X10 F2\n");
 
+    ui->Ym01Button->setGCode("G00 Y-0.1 F2\n");
+    ui->Ym1Button->setGCode("G00 Y-1 F2\n");
+    ui->Ym10Button->setGCode("G00 Y-10 F2\n");
+    ui->Yp01Button->setGCode("G00 Y0.1 F2\n");
+    ui->Yp1Button->setGCode("G00 Y1 F2\n");
+    ui->Yp10Button->setGCode("G00 Y10 F2\n");
 
+    ui->Zm01Button->setGCode("G00 Z-0.1 F2\n");
+    ui->Zm1Button->setGCode("G00 Z-1 F2\n");
+    ui->Zm10Button->setGCode("G00 Z-10 F2\n");
+    ui->Zp01Button->setGCode("G00 Z0.1 F2\n");
+    ui->Zp1Button->setGCode("G00 Z1 F2\n");
+    ui->Zp10Button->setGCode("G00 Z10 F2\n");
 
 
     connect(ui->zeroPosButton,SIGNAL(clicked(bool)),this,SLOT(moveZeroSlot()));
@@ -140,7 +158,7 @@ void directManageWidget::diableSteppersSlot(){
 void directManageWidget::sendGCodeSlot(){
     error = false;
     //проверка на допустимые символы
-    int pos = ui->GlineEdit->text().indexOf(QRegularExpression("[^GMXYZ0-9.IJREF ]"),0);
+    int pos = ui->GlineEdit->text().indexOf(QRegularExpression("[^GMXYZ0-9.IJREF -]"),0);
     if(pos != -1){
         errorSignal("Символ " + ui->GlineEdit->text().mid(pos,1) + " недопустим.");
         return;
@@ -200,8 +218,8 @@ void directManageWidget::sendGCodeSlot(){
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void directManageWidget::directMoveButtonSlot(GPushButton *pointer){
-    QString code = pointer->getGCode();
-    sendGCode(code);
+    QStringList *code = pointer->getGCode();
+    emit sendProgram(code);
 }
 ///////////////////////////////////////////////////////////////////////////////
 

@@ -6,6 +6,8 @@
 #include "drawcommand.h"
 
 
+//парсит текст G кода в программу для видового виджета
+
 class parserGCode
 {
 public:

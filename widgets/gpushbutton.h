@@ -9,7 +9,7 @@ class GPushButton : public QPushButton
 public:
     GPushButton(QWidget *parent);
     void setGCode(QString code);
-    QString getGCode();
+    QStringList *getGCode();
 
 signals:
     void clickedSignal(GPushButton *pointer);
@@ -19,7 +19,7 @@ protected slots:
 
 
 protected:
-    QString gCode;
+    QStringList gCode;
 
 };
 

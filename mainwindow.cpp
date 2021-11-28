@@ -26,6 +26,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(USBPort,SIGNAL(disconnectedSignal()),this,SLOT(disconnectedSlot()));
     connect(ui->DMWidget,SIGNAL(sendGCode(QString)),this,SLOT(sendGCode(QString)));
     connect(ui->DMWidget,SIGNAL(errorSignal(QString)),this,SLOT(errorSlot(QString)));
+    connect(ui->DMWidget,SIGNAL(sendProgram(QStringList*)),this,SLOT(sendProgramm(QStringList*)));
     connect(ui->openAction,SIGNAL(triggered(bool)),this,SLOT(openSlot()));
     connect(ui->ZSpinBox,SIGNAL(valueChanged(double)),this,SLOT(zChangeSlot()));
     connect(ui->FSpinBox,SIGNAL(valueChanged(double)),this,SLOT(fChangeSlot()));
@@ -66,6 +67,10 @@ void MainWindow::disconnectedSlot(){
 void MainWindow::sendGCode(QString gCode){
     USBPort->sendGCode(gCode);
 }
+////////////////////////////////////////////////////////////////////////////////////////////
+void MainWindow::sendProgramm(QStringList *program){
+    USBPort->runProgram(program);
+}
 //////////////////////////////////////////////////////////////////////////////////////////////
 void MainWindow::openSlot(){
     QFileDialog dialog(this);
@@ -75,23 +80,14 @@ void MainWindow::openSlot(){
     if(!fileName.isEmpty()){
         QFile file(fileName);
         if(!file.open(QIODevice::ReadOnly)){
-            QMessageBox box(this);
-            box.setWindowTitle(tr("Ошибка открытия файла ")+file.fileName());
-            box.setStandardButtons(QMessageBox::Ok);
-            box.setIcon(QMessageBox::Critical);
-            box.setText(file.errorString());
-            box.exec();
+            errorSlot(file.errorString(),tr("Ошибка открытия файла ")+file.fileName());
             return;
         }
         ui->gCodeTextEdit->clear();
         ui->vWidget->clearAll();
         if(!Gconverter->convertGerberCode(&file)){
-            QMessageBox box(this);
-            box.setWindowTitle(tr("Ошибка преобразования")+file.fileName());
-            box.setStandardButtons(QMessageBox::Ok);
-            box.setText(Gconverter->getLastError());
-            box.setIcon(QMessageBox::Critical);
-            box.exec();
+            errorSlot(Gconverter->getLastError(),tr("Ошибка преобразования")+file.fileName());
+            return;
         }
         file.close();
         ui->gCodeTextEdit->setPlainText(Gconverter->getGCode());
@@ -99,12 +95,7 @@ void MainWindow::openSlot(){
 
         }
         else{
-            QMessageBox box(this);
-            box.setWindowTitle(tr("Ошибка синтаксиса G-кода ")+file.fileName());
-            box.setStandardButtons(QMessageBox::Ok);
-            box.setIcon(QMessageBox::Critical);
-            box.setText("Ошибка");
-            box.exec();
+            errorSlot(tr("Ошибка синтаксиса G-кода ")+file.fileName());
             return;
         }
         ui->vWidget->drawProgramm(ui->gCodeTextEdit->getPainterProgramm());
@@ -137,10 +128,15 @@ void MainWindow::updateViewSlot(){
     ui->vWidget->update();
 }
 //////////////////////////////////////////////////////////////////////////////////////////////
-void MainWindow::errorSlot(QString error){
+void MainWindow::errorSlot(QString error, QString title){
     QMessageBox box(this);
     box.setIcon(QMessageBox::Critical);
-    box.setWindowTitle("Ошибка");
+    if(title != NULL){
+        box.setWindowTitle(title);
+    }
+    else{
+        box.setWindowTitle("Ошибка");
+    }
     box.setStandardButtons(QMessageBox::Ok);
     box.setText(error);
     box.exec();

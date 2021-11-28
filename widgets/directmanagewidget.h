@@ -27,6 +27,7 @@ protected:
 
 signals:
     void sendGCode(QString gCode);
+    void sendProgram(QStringList *program);
     void errorSignal(QString error);
 
 protected slots:

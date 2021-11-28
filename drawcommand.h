@@ -69,7 +69,6 @@ protected:
     int calcAngle(float X, float Y, float centerX, float centerY);
     void checkCommand();//проверяем явно указанные параметры
 
-
 };
 
 #endif // DRAWCOMMAND_H
