@@ -40,6 +40,8 @@ SOURCES += \
         widgets/consoletextwidget.cpp \
         widgets/directmanagewidget.cpp \
         widgets/gcodeeditwidget.cpp \
+        widgets/gframe.cpp \
+        widgets/gpushbutton.cpp \
         widgets/progressdialor.cpp \
         widgets/serialportsdialog.cpp \
         widgets/viewwidget.cpp
@@ -58,6 +60,8 @@ HEADERS += \
         widgets/consoletextwidget.h \
         widgets/directmanagewidget.h \
         widgets/gcodeeditwidget.h \
+        widgets/gframe.h \
+        widgets/gpushbutton.h \
         widgets/progressdialor.h \
         widgets/serialportsdialog.h \
         widgets/viewwidget.h

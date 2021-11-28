@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>815</width>
-    <height>344</height>
+    <width>708</width>
+    <height>407</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,151 +16,22 @@
   <widget class="QPushButton" name="zeroPosButton">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>310</y>
-     <width>121</width>
+     <x>110</x>
+     <y>140</y>
+     <width>91</width>
      <height>23</height>
     </rect>
    </property>
    <property name="text">
-    <string>В нулевую позицию</string>
+    <string>В 0 позицию</string>
    </property>
-  </widget>
-  <widget class="QFrame" name="frame">
-   <property name="geometry">
-    <rect>
-     <x>210</x>
-     <y>80</y>
-     <width>191</width>
-     <height>201</height>
-    </rect>
-   </property>
-   <property name="frameShape">
-    <enum>QFrame::Box</enum>
-   </property>
-   <property name="frameShadow">
-    <enum>QFrame::Raised</enum>
-   </property>
-   <widget class="QLabel" name="label_3">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>80</y>
-      <width>91</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Позиция по Y</string>
-    </property>
-   </widget>
-   <widget class="QDoubleSpinBox" name="YposSpinBox">
-    <property name="geometry">
-     <rect>
-      <x>90</x>
-      <y>80</y>
-      <width>81</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="minimum">
-     <double>-9999.989999999999782</double>
-    </property>
-    <property name="maximum">
-     <double>999.990000000000009</double>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>50</y>
-      <width>71</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Позиция по Х</string>
-    </property>
-   </widget>
-   <widget class="QDoubleSpinBox" name="XposSpinBox">
-    <property name="geometry">
-     <rect>
-      <x>90</x>
-      <y>50</y>
-      <width>81</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="minimum">
-     <double>-9999.989999999999782</double>
-    </property>
-    <property name="maximum">
-     <double>999.990000000000009</double>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_4">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>110</y>
-      <width>91</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Позиция по Z</string>
-    </property>
-   </widget>
-   <widget class="QDoubleSpinBox" name="ZposSpinBox">
-    <property name="geometry">
-     <rect>
-      <x>90</x>
-      <y>110</y>
-      <width>81</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="minimum">
-     <double>-9999.989999999999782</double>
-    </property>
-    <property name="maximum">
-     <double>99999.990000000005239</double>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_6">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>10</y>
-      <width>161</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Линейное перемещение (G01)</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="setPosButton">
-    <property name="geometry">
-     <rect>
-      <x>30</x>
-      <y>170</y>
-      <width>121</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Отработать</string>
-    </property>
-   </widget>
   </widget>
   <widget class="QPushButton" name="disSteppersButton">
    <property name="geometry">
     <rect>
-     <x>160</x>
-     <y>310</y>
-     <width>121</width>
+     <x>10</x>
+     <y>140</y>
+     <width>91</width>
      <height>23</height>
     </rect>
    </property>
@@ -173,7 +44,7 @@
     <rect>
      <x>150</x>
      <y>0</y>
-     <width>291</width>
+     <width>261</width>
      <height>71</height>
     </rect>
    </property>
@@ -237,7 +108,7 @@
      <rect>
       <x>220</x>
       <y>20</y>
-      <width>51</width>
+      <width>31</width>
       <height>16</height>
      </rect>
     </property>
@@ -308,469 +179,34 @@
     </property>
    </widget>
   </widget>
-  <widget class="QFrame" name="frame_2">
-   <property name="geometry">
-    <rect>
-     <x>410</x>
-     <y>80</y>
-     <width>191</width>
-     <height>201</height>
-    </rect>
-   </property>
-   <property name="frameShape">
-    <enum>QFrame::Box</enum>
-   </property>
-   <property name="frameShadow">
-    <enum>QFrame::Raised</enum>
-   </property>
-   <widget class="QLabel" name="label_10">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>80</y>
-      <width>91</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Позиция по Y</string>
-    </property>
-   </widget>
-   <widget class="QDoubleSpinBox" name="YposSpinBox_2">
-    <property name="geometry">
-     <rect>
-      <x>90</x>
-      <y>80</y>
-      <width>81</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="minimum">
-     <double>-9999.989999999999782</double>
-    </property>
-    <property name="maximum">
-     <double>999.990000000000009</double>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_2">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>50</y>
-      <width>71</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Позиция по Х</string>
-    </property>
-   </widget>
-   <widget class="QDoubleSpinBox" name="XposSpinBox_2">
-    <property name="geometry">
-     <rect>
-      <x>90</x>
-      <y>50</y>
-      <width>81</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="minimum">
-     <double>-9999.989999999999782</double>
-    </property>
-    <property name="maximum">
-     <double>999.990000000000009</double>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_11">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>110</y>
-      <width>91</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Позиция по Z</string>
-    </property>
-   </widget>
-   <widget class="QDoubleSpinBox" name="ZposSpinBox_2">
-    <property name="geometry">
-     <rect>
-      <x>90</x>
-      <y>110</y>
-      <width>81</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="minimum">
-     <double>-9999.989999999999782</double>
-    </property>
-    <property name="maximum">
-     <double>99999.990000000005239</double>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_12">
-    <property name="geometry">
-     <rect>
-      <x>30</x>
-      <y>10</y>
-      <width>131</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Круговое перемещение</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="setPosButton_2">
-    <property name="geometry">
-     <rect>
-      <x>30</x>
-      <y>170</y>
-      <width>121</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Отработать</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_13">
-    <property name="geometry">
-     <rect>
-      <x>30</x>
-      <y>30</y>
-      <width>141</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>по часовой стрелке (G02)</string>
-    </property>
-   </widget>
-   <widget class="QDoubleSpinBox" name="RposSpinBox_2">
-    <property name="geometry">
-     <rect>
-      <x>90</x>
-      <y>140</y>
-      <width>81</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="minimum">
-     <double>-9999.989999999999782</double>
-    </property>
-    <property name="maximum">
-     <double>99999.990000000005239</double>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_14">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>140</y>
-      <width>91</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Радиус</string>
-    </property>
-   </widget>
-  </widget>
-  <widget class="QFrame" name="frame_3">
-   <property name="geometry">
-    <rect>
-     <x>610</x>
-     <y>80</y>
-     <width>191</width>
-     <height>201</height>
-    </rect>
-   </property>
-   <property name="frameShape">
-    <enum>QFrame::Box</enum>
-   </property>
-   <property name="frameShadow">
-    <enum>QFrame::Raised</enum>
-   </property>
-   <widget class="QLabel" name="label_15">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>80</y>
-      <width>91</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Позиция по Y</string>
-    </property>
-   </widget>
-   <widget class="QDoubleSpinBox" name="YposSpinBox_3">
-    <property name="geometry">
-     <rect>
-      <x>90</x>
-      <y>80</y>
-      <width>81</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="minimum">
-     <double>-9999.989999999999782</double>
-    </property>
-    <property name="maximum">
-     <double>999.990000000000009</double>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_16">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>50</y>
-      <width>71</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Позиция по Х</string>
-    </property>
-   </widget>
-   <widget class="QDoubleSpinBox" name="XposSpinBox_3">
-    <property name="geometry">
-     <rect>
-      <x>90</x>
-      <y>50</y>
-      <width>81</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="minimum">
-     <double>-9999.989999999999782</double>
-    </property>
-    <property name="maximum">
-     <double>999.990000000000009</double>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_17">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>110</y>
-      <width>91</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Позиция по Z</string>
-    </property>
-   </widget>
-   <widget class="QDoubleSpinBox" name="ZposSpinBox_3">
-    <property name="geometry">
-     <rect>
-      <x>90</x>
-      <y>110</y>
-      <width>81</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="minimum">
-     <double>-9999.989999999999782</double>
-    </property>
-    <property name="maximum">
-     <double>99999.990000000005239</double>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_18">
-    <property name="geometry">
-     <rect>
-      <x>30</x>
-      <y>10</y>
-      <width>131</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Круговое перемещение</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="setPosButton_3">
-    <property name="geometry">
-     <rect>
-      <x>30</x>
-      <y>170</y>
-      <width>121</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Отработать</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_19">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>30</y>
-      <width>161</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>против часовой стрелки (G03)</string>
-    </property>
-   </widget>
-   <widget class="QDoubleSpinBox" name="RposSpinBox_3">
-    <property name="geometry">
-     <rect>
-      <x>90</x>
-      <y>140</y>
-      <width>81</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="minimum">
-     <double>-9999.989999999999782</double>
-    </property>
-    <property name="maximum">
-     <double>99999.990000000005239</double>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_20">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>140</y>
-      <width>91</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Радиус</string>
-    </property>
-   </widget>
-  </widget>
-  <widget class="QFrame" name="frame_4">
+  <widget class="QGroupBox" name="groupBox_4">
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>80</y>
-     <width>191</width>
-     <height>201</height>
+     <y>70</y>
+     <width>401</width>
+     <height>51</height>
     </rect>
    </property>
-   <property name="frameShape">
-    <enum>QFrame::Box</enum>
+   <property name="title">
+    <string>G Код</string>
    </property>
-   <property name="frameShadow">
-    <enum>QFrame::Raised</enum>
-   </property>
-   <widget class="QLabel" name="label_21">
+   <widget class="QLineEdit" name="GlineEdit">
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>80</y>
-      <width>91</width>
-      <height>16</height>
+      <y>20</y>
+      <width>301</width>
+      <height>20</height>
      </rect>
     </property>
-    <property name="text">
-     <string>Позиция по Y</string>
-    </property>
    </widget>
-   <widget class="QDoubleSpinBox" name="YposSpinBox_4">
+   <widget class="QPushButton" name="sendGCode">
     <property name="geometry">
      <rect>
-      <x>90</x>
-      <y>80</y>
-      <width>81</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="minimum">
-     <double>-9999.989999999999782</double>
-    </property>
-    <property name="maximum">
-     <double>999.990000000000009</double>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_22">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>50</y>
+      <x>320</x>
+      <y>20</y>
       <width>71</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Позиция по Х</string>
-    </property>
-   </widget>
-   <widget class="QDoubleSpinBox" name="XposSpinBox_4">
-    <property name="geometry">
-     <rect>
-      <x>90</x>
-      <y>50</y>
-      <width>81</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="minimum">
-     <double>-9999.989999999999782</double>
-    </property>
-    <property name="maximum">
-     <double>999.990000000000009</double>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_23">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>110</y>
-      <width>91</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Позиция по Z</string>
-    </property>
-   </widget>
-   <widget class="QDoubleSpinBox" name="ZposSpinBox_4">
-    <property name="geometry">
-     <rect>
-      <x>90</x>
-      <y>110</y>
-      <width>81</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="minimum">
-     <double>-9999.989999999999782</double>
-    </property>
-    <property name="maximum">
-     <double>99999.990000000005239</double>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_24">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>10</y>
-      <width>171</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Ускоренное  перемещение (G00)</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="setPosButton_4">
-    <property name="geometry">
-     <rect>
-      <x>30</x>
-      <y>170</y>
-      <width>121</width>
       <height>23</height>
      </rect>
     </property>
@@ -779,7 +215,248 @@
     </property>
    </widget>
   </widget>
+  <widget class="GPushButton" name="Yp10Button">
+   <property name="geometry">
+    <rect>
+     <x>440</x>
+     <y>10</y>
+     <width>41</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Y+10</string>
+   </property>
+  </widget>
+  <widget class="GPushButton" name="Yp1Button">
+   <property name="geometry">
+    <rect>
+     <x>440</x>
+     <y>60</y>
+     <width>41</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Y+1</string>
+   </property>
+  </widget>
+  <widget class="GPushButton" name="Yp01Button">
+   <property name="geometry">
+    <rect>
+     <x>440</x>
+     <y>110</y>
+     <width>41</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Y+0.1</string>
+   </property>
+  </widget>
+  <widget class="GPushButton" name="Ym01Button">
+   <property name="geometry">
+    <rect>
+     <x>440</x>
+     <y>210</y>
+     <width>41</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Y-0.1</string>
+   </property>
+  </widget>
+  <widget class="GPushButton" name="Ym10Button">
+   <property name="geometry">
+    <rect>
+     <x>440</x>
+     <y>310</y>
+     <width>41</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Y-10</string>
+   </property>
+  </widget>
+  <widget class="GPushButton" name="Ym1Button">
+   <property name="geometry">
+    <rect>
+     <x>440</x>
+     <y>260</y>
+     <width>41</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Y-1</string>
+   </property>
+  </widget>
+  <widget class="GPushButton" name="Xp01Button">
+   <property name="geometry">
+    <rect>
+     <x>490</x>
+     <y>160</y>
+     <width>41</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>X+0.1</string>
+   </property>
+  </widget>
+  <widget class="GPushButton" name="Xp1Button">
+   <property name="geometry">
+    <rect>
+     <x>540</x>
+     <y>160</y>
+     <width>41</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>X+1</string>
+   </property>
+  </widget>
+  <widget class="GPushButton" name="Xp10Button">
+   <property name="geometry">
+    <rect>
+     <x>590</x>
+     <y>160</y>
+     <width>41</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>X+10</string>
+   </property>
+  </widget>
+  <widget class="GPushButton" name="Xm1Button">
+   <property name="geometry">
+    <rect>
+     <x>340</x>
+     <y>160</y>
+     <width>41</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>X-1</string>
+   </property>
+  </widget>
+  <widget class="GPushButton" name="Xm10Button">
+   <property name="geometry">
+    <rect>
+     <x>290</x>
+     <y>160</y>
+     <width>41</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>X-10</string>
+   </property>
+  </widget>
+  <widget class="GPushButton" name="Xm01Button">
+   <property name="geometry">
+    <rect>
+     <x>390</x>
+     <y>160</y>
+     <width>41</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>X-0.1</string>
+   </property>
+  </widget>
+  <widget class="GPushButton" name="Zm1Button">
+   <property name="geometry">
+    <rect>
+     <x>650</x>
+     <y>260</y>
+     <width>41</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Z-1</string>
+   </property>
+  </widget>
+  <widget class="GPushButton" name="Zm10Button">
+   <property name="geometry">
+    <rect>
+     <x>650</x>
+     <y>310</y>
+     <width>41</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Z-10</string>
+   </property>
+  </widget>
+  <widget class="GPushButton" name="Zp10Button">
+   <property name="geometry">
+    <rect>
+     <x>650</x>
+     <y>10</y>
+     <width>41</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Z+10</string>
+   </property>
+  </widget>
+  <widget class="GPushButton" name="Zp01Button">
+   <property name="geometry">
+    <rect>
+     <x>650</x>
+     <y>110</y>
+     <width>41</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Z+0.1</string>
+   </property>
+  </widget>
+  <widget class="GPushButton" name="Zp1Button">
+   <property name="geometry">
+    <rect>
+     <x>650</x>
+     <y>60</y>
+     <width>41</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Z+1</string>
+   </property>
+  </widget>
+  <widget class="GPushButton" name="Zm01Button">
+   <property name="geometry">
+    <rect>
+     <x>650</x>
+     <y>210</y>
+     <width>41</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Z-0.1</string>
+   </property>
+  </widget>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>GPushButton</class>
+   <extends>QPushButton</extends>
+   <header location="global">widgets/gpushbutton.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

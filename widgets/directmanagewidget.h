@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include "usbconnection.h"
+#include "widgets/gpushbutton.h"
 
 namespace Ui {
 class directManageWidget;
@@ -17,17 +18,25 @@ public:
     ~directManageWidget();
     void setPlotterStatus(plotterStatus status);
 
+protected:
+    bool error;
+    bool checkG01FromGLine();
+    bool checkG0203FromGLine();
+    bool checkXYZFromGLine();
+    bool checkParameterFromGLine(QString parameter);
+
 signals:
     void sendGCode(QString gCode);
+    void errorSignal(QString error);
 
 protected slots:
-    void moveLineSlot();
     void moveZeroSlot();
     void setZeroSlot();
     void diableSteppersSlot();
-    void cwRotateSlot();
-    void ccwRotateSlot();
-    void fastMoveSlot();
+    void sendGCodeSlot();
+    void directMoveButtonSlot(GPushButton*pointer);
+
+
 
 private:
     Ui::directManageWidget *ui;

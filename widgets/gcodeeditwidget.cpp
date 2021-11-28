@@ -49,7 +49,7 @@ void gCodeEditWidget::setPenDiameter(float diameter){
 void gCodeEditWidget::textChangedSlot(){
     this->cursor().setPos(0,0);
 }
-///////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////
 void gCodeEditWidget::cursorPosChangedSlot(){
 
     //может быть вообще не стоит проверять синтаксис на лету

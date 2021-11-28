@@ -21,11 +21,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
     penDiametersArray.append(1);
 
-
     connect(ui->conntcnAction,SIGNAL(triggered(bool)),this,SLOT(connectSlot()));
     connect(USBPort,SIGNAL(connectedSignal(plotterStatus)),this,SLOT(connectedSlot(plotterStatus)));
     connect(USBPort,SIGNAL(disconnectedSignal()),this,SLOT(disconnectedSlot()));
     connect(ui->DMWidget,SIGNAL(sendGCode(QString)),this,SLOT(sendGCode(QString)));
+    connect(ui->DMWidget,SIGNAL(errorSignal(QString)),this,SLOT(errorSlot(QString)));
     connect(ui->openAction,SIGNAL(triggered(bool)),this,SLOT(openSlot()));
     connect(ui->ZSpinBox,SIGNAL(valueChanged(double)),this,SLOT(zChangeSlot()));
     connect(ui->FSpinBox,SIGNAL(valueChanged(double)),this,SLOT(fChangeSlot()));
@@ -135,6 +135,15 @@ void MainWindow::executeSlot(){
 ///////////////////////////////////////////////////////////////////////////////////////////////
 void MainWindow::updateViewSlot(){
     ui->vWidget->update();
+}
+//////////////////////////////////////////////////////////////////////////////////////////////
+void MainWindow::errorSlot(QString error){
+    QMessageBox box(this);
+    box.setIcon(QMessageBox::Critical);
+    box.setWindowTitle("Ошибка");
+    box.setStandardButtons(QMessageBox::Ok);
+    box.setText(error);
+    box.exec();
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////
 void MainWindow::distribForms(){

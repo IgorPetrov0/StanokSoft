@@ -23,6 +23,7 @@ protected slots:
     void cursorPosChangedSlot();
     void textChangedSlot();
 
+
 signals:
     void updateViewSignal();
 

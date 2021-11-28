@@ -31,6 +31,7 @@ protected slots:
     void fChangeSlot();
     void executeSlot();
     void updateViewSlot();
+    void errorSlot(QString error);
 
 protected:
     usbConnection *USBPort;
