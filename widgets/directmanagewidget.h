@@ -17,6 +17,7 @@ public:
     explicit directManageWidget(QWidget *parent = nullptr);
     ~directManageWidget();
     void setPlotterStatus(plotterStatus status);
+    setSwitchStatus(bool X,bool Y,bool Z);
 
 protected:
     bool error;

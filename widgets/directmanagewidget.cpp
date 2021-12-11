@@ -67,6 +67,29 @@ void directManageWidget::setPlotterStatus(plotterStatus status){
     ui->posYLable->setText(QString::number(status.posY));
     ui->posZLable->setText(QString::number(status.posZ));
 }
+////////////////////////////////////////////////////////////////////////////////////
+directManageWidget::setSwitchStatus(bool X, bool Y, bool Z){
+    if(X){
+        ui->swXLable->setText("Замкнут");
+    }
+    else{
+        ui->swXLable->setText("Разомкнут");
+    }
+
+    if(Y){
+        ui->swYLable->setText("Замкнут");
+    }
+    else{
+        ui->swYLable->setText("Разомкнут");
+    }
+
+    if(Z){
+        ui->swZLable->setText("Замкнут");
+    }
+    else{
+        ui->swZLable->setText("Разомкнут");
+    }
+}
 ///////////////////////////////////////////////////////////////////////////////////
 bool directManageWidget::checkG01FromGLine(){
     bool ok = checkXYZFromGLine();
@@ -139,20 +162,15 @@ bool directManageWidget::checkParameterFromGLine(QString parameter){
 }
 /////////////////////////////////////////////////////////////////////////////
 void directManageWidget::moveZeroSlot(){
-    QString code="G00 X0 Y0 Z0 F"+
-            QString::number(ui->speedSpinBox->value())+
-            "\n";
-    emit sendGCode(code);
+    emit sendGCode("G28");
 }
 /////////////////////////////////////////////////////////////////////////////
 void directManageWidget::setZeroSlot(){
-    QString code="G92";
-    emit sendGCode(code);
+    emit sendGCode("G92");
 }
 ///////////////////////////////////////////////////////////////////////////////////
 void directManageWidget::diableSteppersSlot(){
-    QString code="M18";
-    emit sendGCode(code);
+    emit sendGCode("M18");
 }
 //////////////////////////////////////////////////////////////////////////////////////
 void directManageWidget::sendGCodeSlot(){

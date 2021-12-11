@@ -58,6 +58,7 @@ void MainWindow::connectedSlot(plotterStatus status){
     conIndicator->setState(true);
     ui->DMWidget->setPlotterStatus(status);
     portName->setText(USBPort->getCurrentPortName());
+    ui->DMWidget->setSwitchStatus(status.swX,status.swY,status.swZ);
 }
 ///////////////////////////////////////////////////////////////////////////////////////
 void MainWindow::disconnectedSlot(){

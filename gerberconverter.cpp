@@ -93,14 +93,13 @@ bool gerberConverter::parseAsKiCad(){
     }
     initGProgram();
     connectPaths();
-    if(!createPadsGCode()){
+    if(!createPadsGCode()){//рассчитываем площадки и заполняем программу
         return false;
     }
-    if(!createPathsGCode()){
+    if(!createPathsGCode()){//рассчитываем дорожки и заполняем программу
         return false;
     }
 
-    int t=0;
     return true;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////

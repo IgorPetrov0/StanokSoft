@@ -6,6 +6,7 @@ GPushButton::GPushButton(QWidget *parent):
     connect(this,SIGNAL(clicked(bool)),this,SLOT(clickedSlot(bool)));
     gCode.append("G91");
     gCode.append("G90");
+    //gCode.append("M18");
 }
 /////////////////////////////////////////////////////////////////////////////////
 void GPushButton::setGCode(QString code){

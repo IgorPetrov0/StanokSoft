@@ -15,13 +15,17 @@
 enum messageType{
     MESSAGE_STATUS,
     MESSAGE_G_CODE,
-    MESSAGE_ACKNOWLEDGE
+    MESSAGE_ACKNOWLEDGE,
+    MESSAGE_ERROR
 };
 
 struct plotterStatus{
     float posX;
     float posY;
     float posZ;
+    bool swX;
+    bool swY;
+    bool swZ;
 };
 
 

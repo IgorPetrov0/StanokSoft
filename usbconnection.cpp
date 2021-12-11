@@ -165,11 +165,33 @@ void usbConnection::decodePacket(){
             status.posY = static_cast<float>(tmp)/10;//приводим Int к float
             memcpy(&tmp,inputBuffer.data()+2+sizeof(int)*2,sizeof(int));
             status.posZ = static_cast<float>(tmp)/10;//приводим Int к float
+            if(inputBuffer.at(14) == 1){
+                status.swX = true;
+            }
+            else{
+                status.swX = false;
+            }
+            if(inputBuffer.at(15) == 1){
+                status.swY = true;
+            }
+            else{
+                status.swY = false;
+            }
+            if(inputBuffer.at(16) == 1){
+                status.swZ = true;
+            }
+            else{
+                status.swZ = false;
+            }
             emit connectedSignal(status);
             break;
         }
         case(MESSAGE_ACKNOWLEDGE):{
             sendNextComand();
+            break;
+        }
+        case(MESSAGE_ERROR):{
+
             break;
         }
         default:{
