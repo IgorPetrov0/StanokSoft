@@ -4,7 +4,7 @@
 #include <QString>
 #include <QVector>
 #include "drawcommand.h"
-
+#include "defines.h"
 
 //парсит текст G кода в программу для видового виджета
 

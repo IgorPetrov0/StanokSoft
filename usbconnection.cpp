@@ -242,7 +242,7 @@ void usbConnection::requestTime(){
             QByteArray outArray(4,0);
             outArray[0]=4;
             outArray[1]=MESSAGE_STATUS;
-            writeArray(&outArray);
+            //writeArray(&outArray);
             return;
         }
     }
@@ -279,6 +279,6 @@ void usbConnection::waitTimeSlot(){
                "USB соединение в порядке, но устройство не отвечает."));
     emit disconnectedSignal();
 
-    //deleteCurrentPort();//для отладки. потом вернуть
+    //deleteCurrentPort();//для отладки. потом раскоментировать
 }
 //////////////////////////////////////////////////////////////////////////////////////

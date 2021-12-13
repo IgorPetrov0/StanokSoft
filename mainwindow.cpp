@@ -118,11 +118,7 @@ void MainWindow::fChangeSlot(){
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////
 void MainWindow::executeSlot(){
-    if(!ui->gCodeTextEdit->parseGCode()){
-
-    }
-    ui->vWidget->drawProgramm(ui->gCodeTextEdit->getPainterProgramm());
-
+    sendProgramm(Gconverter->getProgramm());
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////
 void MainWindow::updateViewSlot(){

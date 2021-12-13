@@ -143,7 +143,7 @@ bool parserGCode::parseGcommand(QString frame, drawCommand *command){
     }
     if(com==1){//линейное перемещение
         tmp1=0;//для проверки на наличие хоть одной координаты
-        if(currentZ==0){
+        if(currentZ == zMove){
             command->setType(COMMAND_LINE);
         }
         else{

@@ -92,7 +92,8 @@ bool gerberConverter::parseAsKiCad(){
         return false;
     }
     initGProgram();
-    connectPaths();
+    connectPaths();//оптимизация путей из набора коротких в длинные
+    convertCoordinates();//пересчитываем все координаты в систему координат станка
     if(!createPadsGCode()){//рассчитываем площадки и заполняем программу
         return false;
     }
@@ -288,7 +289,7 @@ bool gerberConverter::makePathsArray(){
     int tmp1=0;
     float fTmp=0;
     QString tmpStr;
-    QPointF tmpPoint;
+    QPointF *tmpPoint = nullptr;
     GPath *tmpPath = new GPath;//создаем путь
 
     for(;n!=size;n++){
@@ -317,33 +318,36 @@ bool gerberConverter::makePathsArray(){
         tmpStr=string.mid(string.size()-4,3);
         if(tmpStr=="D02"){//значит нашли перемещение без засветки
             if(string.left(1)=="X"){
+                tmpPoint = new QPointF;
                 if(!readXCoordinate(string,&fTmp)){//читаем координату Х
                     lastError==tr("Ошибка чтения координаты X. Строка ")+QString::number(n);
+                    delete tmpPoint;
                     delete tmpPath;
                     delete pathsArray;
                     pathsArray=nullptr;
                     return false;
                 }
-                tmpPoint.setX(fTmp);
+                tmpPoint->setX(fTmp);
 
                 if(!readYCoordinate(string,&fTmp)){//читаем координату Y
                     lastError==tr("Ошибка чтения координаты Y. Строка ")+QString::number(n);
+                    delete tmpPoint;
                     delete tmpPath;
                     delete pathsArray;
                     pathsArray=nullptr;
                     return false;
                 }
-                tmpPoint.setY(fTmp);
+                tmpPoint->setY(fTmp);
 
                 tmpPath->setApp(pcApperture);
 
                 //перемещение без засветки это или начало пути или продолжение
                 //если его координаты в пределах аппертуры предыдущей координаты, то это продолжение
                 //иначе начало
-                QPointF tmpPoint2=tmpPath->endtPoint();
+                QPointF *tmpPoint2 = tmpPath->endtPoint();
                 if(tmpPath->getPointsCount()!=0){
                     if(pcApperture->isInApperture(tmpPoint,tmpPoint2)){//если в аппертуре
-                        if(tmpPoint!=tmpPoint2){//и если точки не равны
+                        if(*tmpPoint != *tmpPoint2){//и если точки не равны
                             tmpPath->addPoint(tmpPoint);//то добавляем
                         }
                     }
@@ -360,23 +364,26 @@ bool gerberConverter::makePathsArray(){
             }
         }
         else if(tmpStr=="D01"){//значит нашли перемещение с засветкой
+            tmpPoint = new QPointF;
             if(!readXCoordinate(string,&fTmp)){//читаем координату Х
                 lastError==tr("Ошибка чтения координаты X. Строка ")+QString::number(n);
+                delete tmpPoint;
                 delete tmpPath;
                 delete pathsArray;
                 pathsArray=nullptr;
                 return false;
             }
-            tmpPoint.setX(fTmp);
+            tmpPoint->setX(fTmp);
 
             if(!readYCoordinate(string,&fTmp)){//читаем координату Y
                 lastError==tr("Ошибка чтения координаты Y. Строка ")+QString::number(n);
+                delete tmpPoint;
                 delete tmpPath;
                 delete pathsArray;
                 pathsArray=nullptr;
                 return false;
             }
-            tmpPoint.setY(fTmp);
+            tmpPoint->setY(fTmp);
             tmpPath->addPoint(tmpPoint);//добавляем точку в любом случае
         }
     }
@@ -463,10 +470,10 @@ apperture *gerberConverter::findApperture(int number){
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 void gerberConverter::initGProgram(){
-    gProgramm.append("G01 Z10");
-    gProgramm.append("G01 X0 Y0");
+    gProgramm.append("G01 Z0 F2\n");
+    gProgramm.append("G01 X0 Y0\n");
     currentPosInGProg=2;
-    gProgramm.append("G01 Z10");
+    gProgramm.append("G01 Z0\n");
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 void gerberConverter::addGCommand(QString command){
@@ -546,7 +553,7 @@ void gerberConverter::connectPaths(){
                 float appSize=0;
                 if(currentPath->appertureSize()==nextPath->appertureSize()){
                     appSize=abs(nextPath->appertureSize()/2);
-                    QPointF diff=currentPath->endtPoint()-nextPath->startPoint();
+                    QPointF diff = *currentPath->endtPoint() - *nextPath->startPoint();
                     if((abs(diff.x())<=appSize) && (abs(diff.y())<=appSize)){//если начало следующего пути в зоне текущего
                         currentPath->addPath(nextPath);//то добавляем путь к текущему
                         pathsArray->remove(n);//удаляем путь
@@ -566,6 +573,24 @@ void gerberConverter::connectPaths(){
             }
         }
     }
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void gerberConverter::convertCoordinates(){
+    //пересчитываем координаты из системы координат редактора в систему координат станка.
+    //за 0 принимаем координаты первой площадки в списке
+
+    float coordX = padsArray->at(0)->getX();
+    float coordY = padsArray->at(0)->getY();
+
+    foreach(pad *nextPad, *padsArray){
+        nextPad->setX(nextPad->getX() - coordX);
+        nextPad->setY(nextPad->getY() - coordY);
+    }
+
+    foreach(GPath *nextPath, *pathsArray){
+        nextPath->convertCoordinates(coordX, coordY);
+    }
+
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 QVector<pad *> *gerberConverter::getPadsArray() const{
@@ -592,9 +617,13 @@ QString gerberConverter::getGCode(){
     QString tmpStr;
     int size=gProgramm.size();
     for(int n=0;n!=size;n++){
-        tmpStr+=gProgramm.at(n)+"\n";
+        tmpStr+=gProgramm.at(n);
     }
     return tmpStr;
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+QStringList *gerberConverter::getProgramm(){
+    return &gProgramm;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 void gerberConverter::processStopSlot(){

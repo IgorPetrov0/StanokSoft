@@ -49,6 +49,7 @@ SOURCES += \
 HEADERS += \
         apperture.h \
         connectionindicator.h \
+        defines.h \
         drawcommand.h \
         gerberconverter.h \
         gpath.h \

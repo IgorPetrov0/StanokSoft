@@ -86,14 +86,14 @@ int apperture::getNumber() const{
     return number;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////
-bool apperture::isInApperture(QPointF point1, QPointF point2){
+bool apperture::isInApperture(QPointF *point1, QPointF *point2){
     float difX=0;
     float difY=0;
 
     switch(type){
         case(APP_CYCLE):{
-            difX=point1.x()-point2.x();
-            difY=point1.y()-point2.y();
+            difX=point1->x()-point2->x();
+            difY=point1->y()-point2->y();
             float radius=xSize/2;
             if((abs(difX)<=radius) && (abs(difY)<=radius)){
                 return true;
@@ -101,16 +101,16 @@ bool apperture::isInApperture(QPointF point1, QPointF point2){
             return false;
         }
         case(APP_OVAL):{//TODO потом усложнить проверку овала
-            difX=point1.x()-point2.x();
-            difY=point1.y()-point2.y();
+            difX=point1->x()-point2->x();
+            difY=point1->y()-point2->y();
             if((abs(difX)<=xSize) && (abs(difY)<=ySize)){
                 return true;
             }
             return false;
         }
         case(APP_RECT):{
-            difX=point1.x()-point2.x();
-            difY=point1.y()-point2.y();
+            difX=point1->x()-point2->x();
+            difY=point1->y()-point2->y();
             if((abs(difX)<=xSize/2) && (abs(difY)<=ySize/2)){
                 return true;
             }

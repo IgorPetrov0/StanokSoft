@@ -6,6 +6,7 @@
 #include <QStringList>
 #include <QVector2D>
 #include "apperture.h"
+#include "defines.h"
 
 class GPath //путь - это траектория, состоящия из точек,
         //которые проходятся непрерывно одна за другой и
@@ -15,23 +16,25 @@ public:
     GPath();
     ~GPath();
     void setApp(apperture *value);
-    void addPoint(QPointF point);
+    void addPoint(QPointF *point);
     void addPath(GPath *path);
-    QPointF startPoint();
-    QPointF endtPoint();
+    QPointF *startPoint();
+    QPointF *endtPoint();
     int getPointsCount();
     QStringList calcGCode(float penDiameter, float force);
     bool isValide();
     bool isApperture();
     float appertureSize();
-    QPointF getPoint(int index);
+    QPointF *getPoint(int index);
+    void convertCoordinates(float zeroX, float zeroY);
 
 protected:
     apperture *currentApperture;
-    QVector<QPointF> *pointsArray;
+    QVector<QPointF*> *pointsArray;
     bool valide;
-    QPointF perOffset(QPointF point1, QPointF point2, float distance);
+    QPointF perOffset(QPointF *point1, QPointF *point2, float distance);
     QPointF parLengthOffset(QPointF startPoint, QPoint parPoint1, QPointF parPoint2);
+
 
 };
 

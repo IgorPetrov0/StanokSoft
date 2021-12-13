@@ -38,6 +38,7 @@ public:
     void setForce(float force);
     void setZOffset(float zOffset);
     QString getGCode();
+    QStringList *getProgramm();
 
 protected:
     QString KiCadVersion;
@@ -75,6 +76,7 @@ protected:
     bool createPadsGCode();
     bool createPathsGCode();
     void connectPaths();
+    void convertCoordinates();
 
 protected slots:
     void processStopSlot();
