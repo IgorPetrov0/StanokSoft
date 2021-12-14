@@ -33,8 +33,9 @@ bool usbConnection::selectPort(){
                 currentPort=SPDialog.getPort();
                 connect(currentPort,SIGNAL(errorOccurred(QSerialPort::SerialPortError)),this,SLOT(portError(QSerialPort::SerialPortError)));
                 connect(currentPort,SIGNAL(readyRead()),this,SLOT(dataReadyRead()));
+                return true;
             }
-            return true;
+            return false;
         }
         deleteCurrentPort();
         message(tr("В системе не обнаружено СОМ портов."));
@@ -42,21 +43,20 @@ bool usbConnection::selectPort(){
     }
 }
 ////////////////////////////////////////////////////////////////////////////
-void usbConnection::connectPort(){
+bool usbConnection::connectPort(){
     if(currentPort==nullptr){
         if(selectPort()){
             if(currentPort->open(QIODevice::ReadWrite)){
                 statusTimer.start(1000);
+                return true;
             }
             else{
                 message(tr("Невозможно открыть порт")+currentPort->portName()+"\n"+
                         currentPort->errorString());
             }
         }
-        else{
-            message(tr("Порт не выбран. Соединение невозможно."));
-        }
     }
+    return false;
 }
 ///////////////////////////////////////////////////////////////////////////////////////
 void usbConnection::disconnectPort(){

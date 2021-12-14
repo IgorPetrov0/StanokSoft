@@ -49,8 +49,9 @@ void MainWindow::connectSlot(){
         ui->conntcnAction->setText("Подключиться");
     }
     else{
-        USBPort->connectPort();
-        ui->conntcnAction->setText("Отключиться");
+        if(USBPort->connectPort()){
+            ui->conntcnAction->setText("Отключиться");
+        }
     }
 }
 /////////////////////////////////////////////////////////////////////////////////////////

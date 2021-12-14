@@ -37,7 +37,7 @@ public:
     usbConnection(QWidget *parent);
     ~usbConnection();
     bool selectPort();
-    void connectPort();
+    bool connectPort();
     void disconnectPort();
     QString getCurrentPortName();
     void sendGCode(QString gCode);
