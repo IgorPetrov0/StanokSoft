@@ -31,6 +31,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->ZSpinBox,SIGNAL(valueChanged(double)),this,SLOT(zChangeSlot()));
     connect(ui->FSpinBox,SIGNAL(valueChanged(double)),this,SLOT(fChangeSlot()));
     connect(ui->runPushButton,SIGNAL(clicked(bool)),this,SLOT(executeSlot()));
+    connect(ui->stopPushButton,SIGNAL(clicked(bool)),this,SLOT(stopSlot()));
     connect(ui->gCodeTextEdit,SIGNAL(updateViewSignal()),this,SLOT(updateViewSlot()));
     distribForms();
 }
@@ -60,18 +61,22 @@ void MainWindow::connectedSlot(plotterStatus status){
     ui->DMWidget->setPlotterStatus(status);
     portName->setText(USBPort->getCurrentPortName());
     ui->DMWidget->setSwitchStatus(status.swX,status.swY,status.swZ);
+    ui->consoleWidget->addString("Подключение");
 }
 ///////////////////////////////////////////////////////////////////////////////////////
 void MainWindow::disconnectedSlot(){
     conIndicator->setState(false);
+    ui->consoleWidget->addString("Отключение");
 }
 ///////////////////////////////////////////////////////////////////////////////////////////
 void MainWindow::sendGCode(QString gCode){
     USBPort->sendGCode(gCode);
+    ui->consoleWidget->addString("Код " + gCode + " отправлен в контроллер.");
 }
 ////////////////////////////////////////////////////////////////////////////////////////////
 void MainWindow::sendProgramm(QStringList *program){
     USBPort->runProgram(program);
+    ui->consoleWidget->addString("Программа отправлена в контроллер");
 }
 //////////////////////////////////////////////////////////////////////////////////////////////
 void MainWindow::openSlot(){
@@ -85,6 +90,7 @@ void MainWindow::openSlot(){
             errorSlot(file.errorString(),tr("Ошибка открытия файла ")+file.fileName());
             return;
         }
+        ui->consoleWidget->addString("Файл " + fileName + " открыт.");
         ui->gCodeTextEdit->clear();
         ui->vWidget->clearAll();
         if(!Gconverter->convertGerberCode(&file)){
@@ -94,7 +100,7 @@ void MainWindow::openSlot(){
         file.close();
         ui->gCodeTextEdit->setPlainText(Gconverter->getGCode());
         if(ui->gCodeTextEdit->parseGCode()){
-
+            ui->consoleWidget->addString("Парсинг " + fileName + " успешно завершен.");
         }
         else{
             errorSlot(tr("Ошибка синтаксиса G-кода ")+file.fileName());
@@ -138,6 +144,17 @@ void MainWindow::errorSlot(QString error, QString title){
     box.setStandardButtons(QMessageBox::Ok);
     box.setText(error);
     box.exec();
+    ui->consoleWidget->addString(error);
+}
+//////////////////////////////////////////////////////////////////////////////////////////////
+void MainWindow::stopSlot(){
+    USBPort->stopProgram();
+    ui->consoleWidget->addString("Останов программы");
+}
+/////////////////////////////////////////////////////////////////////////////////////////////
+void MainWindow::pauseSlot(){
+    USBPort->pauseProgram();
+    ui->consoleWidget->addString("Пауза");
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////
 void MainWindow::distribForms(){

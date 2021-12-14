@@ -33,6 +33,8 @@ protected slots:
     void executeSlot();
     void updateViewSlot();
     void errorSlot(QString error, QString title = NULL);
+    void stopSlot();
+    void pauseSlot();
 
 protected:
     usbConnection *USBPort;

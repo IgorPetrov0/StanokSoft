@@ -50,6 +50,7 @@ public:
 signals:
     void connectedSignal(plotterStatus status);
     void disconnectedSignal();
+    void errorSignal(QString error, QString title = NULL);
 
 protected:
     QWidget *parentWidget;

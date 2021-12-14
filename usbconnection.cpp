@@ -104,6 +104,7 @@ bool usbConnection::isConnected(){
 }
 ///////////////////////////////////////////////////////////////////////////////////////
 void usbConnection::runProgram(QStringList *program){
+
     programPointer = program;
     runing = true;
     sendNextComand();
@@ -230,8 +231,8 @@ void usbConnection::sendNextComand(){
 ////////////////////////////////////////////////////////////////////////////////////
 void usbConnection::portError(QSerialPort::SerialPortError error){
     if(error!=QSerialPort::NoError){
-        message(tr("Ошибка порта ")+currentPort->portName()+"\n"+
-                currentPort->errorString());
+        errorSignal(tr("Ошибка порта ")+currentPort->portName()+"\n"+
+                currentPort->errorString(),"USB порт.");
         emit disconnectedSignal();
     }
 }
