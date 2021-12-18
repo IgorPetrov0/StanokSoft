@@ -22,8 +22,9 @@ MainWindow::MainWindow(QWidget *parent) :
     penDiametersArray.append(1);
 
     connect(ui->conntcnAction,SIGNAL(triggered(bool)),this,SLOT(connectSlot()));
-    connect(USBPort,SIGNAL(connectedSignal(plotterStatus)),this,SLOT(connectedSlot(plotterStatus)));
+    connect(USBPort,SIGNAL(statusSignal(plotterStatus)),this,SLOT(statusSlot(plotterStatus)));
     connect(USBPort,SIGNAL(disconnectedSignal()),this,SLOT(disconnectedSlot()));
+    connect(USBPort,SIGNAL(messageSignal(QString)),this,SLOT(messageSlot(QString)));
     connect(ui->DMWidget,SIGNAL(sendGCode(QString)),this,SLOT(sendGCode(QString)));
     connect(ui->DMWidget,SIGNAL(errorSignal(QString)),this,SLOT(errorSlot(QString)));
     connect(ui->DMWidget,SIGNAL(sendProgram(QStringList*)),this,SLOT(sendProgramm(QStringList*)));
@@ -51,17 +52,18 @@ void MainWindow::connectSlot(){
     }
     else{
         if(USBPort->connectPort()){
+            ui->consoleWidget->addString("Подключение");
             ui->conntcnAction->setText("Отключиться");
         }
     }
 }
 /////////////////////////////////////////////////////////////////////////////////////////
-void MainWindow::connectedSlot(plotterStatus status){
+void MainWindow::statusSlot(plotterStatus status){
     conIndicator->setState(true);
     ui->DMWidget->setPlotterStatus(status);
     portName->setText(USBPort->getCurrentPortName());
     ui->DMWidget->setSwitchStatus(status.swX,status.swY,status.swZ);
-    ui->consoleWidget->addString("Подключение");
+    ui->consoleWidget->addString("Статусное сообщение");
 }
 ///////////////////////////////////////////////////////////////////////////////////////
 void MainWindow::disconnectedSlot(){
@@ -155,6 +157,10 @@ void MainWindow::stopSlot(){
 void MainWindow::pauseSlot(){
     USBPort->pauseProgram();
     ui->consoleWidget->addString("Пауза");
+}
+/////////////////////////////////////////////////////////////////////////////////////////////
+void MainWindow::messageSlot(QString message){
+    ui->consoleWidget->addString(message);
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////
 void MainWindow::distribForms(){

@@ -5,6 +5,7 @@
 #include <QPointF>
 #include <QStringList>
 #include <QVector2D>
+#include <cmath>
 #include "apperture.h"
 #include "defines.h"
 

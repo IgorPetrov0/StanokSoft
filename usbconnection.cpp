@@ -73,6 +73,7 @@ QString usbConnection::getCurrentPortName(){
 void usbConnection::sendGCode(QString gCode){
     if(currentPort!=nullptr){
         if(currentPort->isOpen()){
+            statusTimer.stop();//на время выполнения команды статус не запрашиваем
             QByteArray outArray(4,0);
             outArray[1]=MESSAGE_G_CODE;
             outArray.append(gCode);
@@ -84,16 +85,12 @@ void usbConnection::sendGCode(QString gCode){
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
 void usbConnection::writeArray(QByteArray *array){
-    statusTimer.stop();
-    waitTimer.stop();
     array->data()[0]=static_cast<char>(array->size()+2);//здесь считаем и устанавливаем размер пакета
     quint16 crc=Crc16(array->data(),array->size());
     array->append((char)0);//добавляем 2 лишних байта в конец штатным способом
     array->append((char)0);
     memcpy(array->data()+(array->size()-2),&crc,2);
     currentPort->write(*array);
-    waitTimer.start(100);
-    statusTimer.start(1000);
 }
 ///////////////////////////////////////////////////////////////////////////////////////
 bool usbConnection::isConnected(){
@@ -104,7 +101,6 @@ bool usbConnection::isConnected(){
 }
 ///////////////////////////////////////////////////////////////////////////////////////
 void usbConnection::runProgram(QStringList *program){
-
     programPointer = program;
     runing = true;
     sendNextComand();
@@ -118,6 +114,37 @@ void usbConnection::stopProgram(){
 //////////////////////////////////////////////////////////////////////////////////////
 void usbConnection::pauseProgram(){
     runing = false;
+}
+////////////////////////////////////////////////////////////////////////////////////
+void usbConnection::decodeStatus(){
+    plotterStatus status;
+    int offset = inputBuffer.size()-17;//смещение статусного массива
+    int tmp=0;
+    memcpy(&tmp,inputBuffer.data()+offset,sizeof(int));
+    status.posX = static_cast<float>(tmp)/10;//приводим Int к float
+    memcpy(&tmp,inputBuffer.data()+offset+sizeof(int),sizeof(int));
+    status.posY = static_cast<float>(tmp)/10;//приводим Int к float
+    memcpy(&tmp,inputBuffer.data()+offset+sizeof(int)*2,sizeof(int));
+    status.posZ = static_cast<float>(tmp)/10;//приводим Int к float
+    if(inputBuffer.at(offset + 12) == 1){
+        status.swX = true;
+    }
+    else{
+        status.swX = false;
+    }
+    if(inputBuffer.at(offset + 13) == 1){
+        status.swY = true;
+    }
+    else{
+        status.swY = false;
+    }
+    if(inputBuffer.at(offset + 14) == 1){
+        status.swZ = true;
+    }
+    else{
+        status.swZ = false;
+    }
+    emit statusSignal(status);
 }
 /////////////////////////////////////////////////////////////////////////////////
 void usbConnection::deleteCurrentPort(){
@@ -156,41 +183,21 @@ quint16 usbConnection::Crc16(char *pcBlock, unsigned short len)
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 void usbConnection::decodePacket(){
     switch(inputBuffer.at(1)){
-        case(MESSAGE_STATUS):{
-            plotterStatus status;
-
-            int tmp=0;
-            memcpy(&tmp,inputBuffer.data()+2,sizeof(int));
-            status.posX = static_cast<float>(tmp)/10;//приводим Int к float
-            memcpy(&tmp,inputBuffer.data()+2+sizeof(int),sizeof(int));
-            status.posY = static_cast<float>(tmp)/10;//приводим Int к float
-            memcpy(&tmp,inputBuffer.data()+2+sizeof(int)*2,sizeof(int));
-            status.posZ = static_cast<float>(tmp)/10;//приводим Int к float
-            if(inputBuffer.at(14) == 1){
-                status.swX = true;
-            }
-            else{
-                status.swX = false;
-            }
-            if(inputBuffer.at(15) == 1){
-                status.swY = true;
-            }
-            else{
-                status.swY = false;
-            }
-            if(inputBuffer.at(16) == 1){
-                status.swZ = true;
-            }
-            else{
-                status.swZ = false;
-            }
-            emit connectedSignal(status);
-            break;
-        }
-        case(MESSAGE_ACKNOWLEDGE):{
+        case(MESSAGE_COMPLETE):{//после завершения выполнения команды стартуем запрос статуса
+            statusTimer.start(1000);
             sendNextComand();
+            emit messageSignal("Завершение команды");
+            //и декодируем статус
+        }
+        case(MESSAGE_STATUS):{
+            decodeStatus();
             break;
         }
+//        case(MESSAGE_ACKNOWLEDGE):{//подтверждение получения команды контроллером
+//            waitTimer.stop();
+//            emit messageSignal("Подтверждение команды");
+//            break;
+//        }
         case(MESSAGE_ERROR):{
 
             break;
@@ -231,8 +238,8 @@ void usbConnection::sendNextComand(){
 ////////////////////////////////////////////////////////////////////////////////////
 void usbConnection::portError(QSerialPort::SerialPortError error){
     if(error!=QSerialPort::NoError){
-        errorSignal(tr("Ошибка порта ")+currentPort->portName()+"\n"+
-                currentPort->errorString(),"USB порт.");
+        emit messageSignal(tr("Ошибка порта ")+currentPort->portName()+"\n"+
+                currentPort->errorString());
         emit disconnectedSignal();
     }
 }
@@ -243,7 +250,7 @@ void usbConnection::requestTime(){
             QByteArray outArray(4,0);
             outArray[0]=4;
             outArray[1]=MESSAGE_STATUS;
-            //writeArray(&outArray);
+            writeArray(&outArray);
             return;
         }
     }

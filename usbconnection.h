@@ -15,6 +15,7 @@
 enum messageType{
     MESSAGE_STATUS,
     MESSAGE_G_CODE,
+    MESSAGE_COMPLETE,
     MESSAGE_ACKNOWLEDGE,
     MESSAGE_ERROR
 };
@@ -46,11 +47,12 @@ public:
     void runProgram(QStringList *program);
     void stopProgram();
     void pauseProgram();
+    void decodeStatus();
 
 signals:
-    void connectedSignal(plotterStatus status);
+    void statusSignal(plotterStatus status);
     void disconnectedSignal();
-    void errorSignal(QString error, QString title = NULL);
+    void messageSignal(QString message);
 
 protected:
     QWidget *parentWidget;

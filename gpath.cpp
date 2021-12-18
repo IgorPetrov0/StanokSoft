@@ -25,6 +25,9 @@ void GPath::addPoint(QPointF *point){
     if(pointsArray==nullptr){
         pointsArray = new QVector<QPointF*>;
     }
+    point->setX(round(point->x()*10)/10);
+    point->setY(round(point->y()*10)/10);
+
     pointsArray->append(point);
     if(pointsArray->size()>1){//путь считается валидным, если состоит из более, чем одной точки
         valide=true;
@@ -78,12 +81,12 @@ QStringList GPath::calcGCode(float penDiameter, float force){
     tmpProg.append("G00 Z"+QString::number(zMove)+"\n");//опускаем в позицию рисования, делаем точку
     for(int n=0;n!=size;n++){//строим центральную линию
         QPointF *point=pointsArray->at(n);
-        float X=point->x();
-        float Y=point->y();
+        float X=round(point->x()*10)/10;
+        float Y=round(point->y()*10)/10;
         tmpProg.append("G01 X"+QString::number(X)+" Y"+QString::number(Y)+" F"+QString::number(force)+"\n");
     }
 
-    float penRadius=penDiameter/2;
+    float penRadius = round((penDiameter/2)*10)/10;
     int lines=(currentApperture->getXSize()/2)/penRadius;
 
     for(int n=1;n!=lines+1;n++){
@@ -169,6 +172,9 @@ QPointF GPath::perOffset(QPointF *point1, QPointF *point2, float distance){
     perpendicular.normalize();
     perpendicular *= distance;
     rezult = *point1 + perpendicular.toPointF();
+    rezult.setX(round(rezult.x()*10)/10);
+    rezult.setY(round(rezult.y()*10)/10);
+
     return rezult;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////

@@ -22,7 +22,7 @@ public:
 
 protected slots:
     void connectSlot();
-    void connectedSlot(plotterStatus status);
+    void statusSlot(plotterStatus status);
     void disconnectedSlot();
     void sendGCode(QString gCode);
     void sendProgramm(QStringList *program);
@@ -35,6 +35,7 @@ protected slots:
     void errorSlot(QString error, QString title = NULL);
     void stopSlot();
     void pauseSlot();
+    void messageSlot(QString message);
 
 protected:
     usbConnection *USBPort;

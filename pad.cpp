@@ -6,11 +6,11 @@ pad::pad()
 }
 ////////////////////////////////////////////////////////////
 void pad::setX(float value){
-    X = value;
+    X = round(value*10)/10;
 }
 ///////////////////////////////////////////////////////////////////
 void pad::setY(float value){
-    Y = value;
+    Y = round(value*10)/10;
 }
 ///////////////////////////////////////////////////////////////////
 void pad::setApp(apperture *value){
@@ -23,6 +23,7 @@ QStringList pad::calcGCode(float penDiameter, float force){
         case(APP_CYCLE):{
             int lines=(app->getXSize()/2)/(penDiameter/2);//количество целых линий
             float lastLineOffset=(app->getXSize()/2)-(penDiameter/2*lines);//смещение последней линии
+            lastLineOffset = round(lastLineOffset*10)/10;
             //например, если размер Pad-а 2.2мм, а диаметр пера 1мм, то смещение последней линии будет 0.1мм
             tmpProg.append("G00 X"+QString::number(X)+" Y"+QString::number(Y)+" F"+QString::number(force) + "\n");//смещаем инструмент в позицию
             tmpProg.append("G00 Z"+QString::number(zMove)+"\n");//опускаем в позицию рисования, делаем точку
@@ -46,15 +47,17 @@ QStringList pad::calcGCode(float penDiameter, float force){
             float center1=0;//смещения центров дуг верхней/нижней или правой/левой
             float center2=0;
             float centerOffset=0;
-            float penRadius=penDiameter/2;
+            float penRadius=round((penDiameter/2)*10)/10;
             //количество линий считаем по наименьшему размеру
             if(app->getXSize()>app->getYSize()){//горизонтальный овал
                 lines=(app->getYSize()/2)/(penDiameter/2);//количество целых линий
                 lastLineOffset=(app->getYSize()/2)-(penDiameter/2*lines);//смещение последней линии
+                lastLineOffset = round(lastLineOffset*10)/10;//округляем до одного знака после запятой
                 //например, если размер Pad-а 2.2мм, а диаметр пера 1мм, то смещение последней линии будет 0.1мм
                 float halfSize=app->getXSize()/2;
                 float step=0;
                 centerOffset=halfSize-((lines*penRadius)+lastLineOffset);
+                centerOffset = round(centerOffset*10)/10;
                 center1=X+centerOffset;
                 center2=X-centerOffset;
                 tmpProg.append("G00 X"+QString::number(center1)+" Y"+QString::number(Y)+" F"+QString::number(force)+"\n");//смещаем инструмент в позицию
@@ -80,8 +83,10 @@ QStringList pad::calcGCode(float penDiameter, float force){
             else{//вертикальный овал
                 lines=(app->getXSize()/2)/(penDiameter/2);//количество целых линий
                 lastLineOffset=(app->getXSize()/2)-(penDiameter/2*lines);//смещение последней линии
+                lastLineOffset = round(lastLineOffset*10)/10;//округляем до одного знака после запятой
                 //например, если размер Pad-а 2.2мм, а диаметр пера 1мм, то смещение последней линии будет 0.1мм
                 float halfSize=app->getYSize()/2;
+                halfSize = round(halfSize*10)/10;//округляем до одного знака после запятой
                 float step=0;
                 centerOffset=halfSize-((lines*penRadius)+lastLineOffset);
                 center1=Y+centerOffset;

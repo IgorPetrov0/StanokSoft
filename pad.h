@@ -3,6 +3,7 @@
 
 #include <QString>
 #include <QStringList>
+#include <cmath>
 #include "apperture.h"
 #include "defines.h"
 
