@@ -1,7 +1,7 @@
 #ifndef DEFINES_H
 #define DEFINES_H
 
-#define zMove 5 //рабочая высота пера
+#define zMove -10 //рабочая высота пера
 
 
 #endif // DEFINES_H

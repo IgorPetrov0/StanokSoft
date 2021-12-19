@@ -55,6 +55,21 @@ directManageWidget::directManageWidget(QWidget *parent) :
     connect(ui->Zp1Button,SIGNAL(clickedSignal(GPushButton*)),this,SLOT(directMoveButtonSlot(GPushButton*)));
     connect(ui->Zp10Button,SIGNAL(clickedSignal(GPushButton*)),this,SLOT(directMoveButtonSlot(GPushButton*)));
 
+    connect(ui->topLeftButton,SIGNAL(clickedSignal(GPushButton*)),this,SLOT(rectMoveButtonSlot(GPushButton*)));
+    connect(ui->topRightButton,SIGNAL(clickedSignal(GPushButton*)),this,SLOT(rectMoveButtonSlot(GPushButton*)));
+    connect(ui->bottomLefrButton,SIGNAL(clickedSignal(GPushButton*)),this,SLOT(rectMoveButtonSlot(GPushButton*)));
+    connect(ui->bottomRightButton,SIGNAL(clickedSignal(GPushButton*)),this,SLOT(rectMoveButtonSlot(GPushButton*)));
+    connect(ui->toZeroPosButton,SIGNAL(clickedSignal(GPushButton*)),this,SLOT(rectMoveButtonSlot(GPushButton*)));
+
+    ui->bottomLefrButton->setText("0");
+    ui->bottomRightButton->setText("0");
+    ui->topLeftButton->setText("0");
+    ui->topRightButton->setText("0");
+    ui->bottomLefrButton->setDisabled(true);
+    ui->bottomRightButton->setDisabled(true);
+    ui->topLeftButton->setDisabled(true);
+    ui->topRightButton->setDisabled(true);
+
     error = false;
 }
 ///////////////////////////////////////////////////////////////////////////
@@ -68,7 +83,7 @@ void directManageWidget::setPlotterStatus(plotterStatus status){
     ui->posZLable->setText(QString::number(status.posZ));
 }
 ////////////////////////////////////////////////////////////////////////////////////
-directManageWidget::setSwitchStatus(bool X, bool Y, bool Z){
+void directManageWidget::setSwitchStatus(bool X, bool Y, bool Z){
     if(X){
         ui->swXLable->setText("Замкнут");
     }
@@ -89,6 +104,35 @@ directManageWidget::setSwitchStatus(bool X, bool Y, bool Z){
     else{
         ui->swZLable->setText("Разомкнут");
     }
+}
+//////////////////////////////////////////////////////////////////////////////////
+void directManageWidget::setWorkRect(QRectF rect){
+
+    QString bottomLeftX = QString::number(rect.bottomLeft().x());
+    QString bottomLeftY = QString::number(rect.bottomLeft().y());
+    QString bottomRightX = QString::number(rect.bottomRight().x());
+    QString bottomRightY = QString::number(rect.bottomRight().y());
+    QString topLeftX = QString::number(rect.topLeft().x());
+    QString topLeftY = QString::number(rect.topLeft().y());
+    QString topRightX = QString::number(rect.topRight().x());
+    QString topRightY = QString::number(rect.topRight().y());
+
+    ui->bottomLefrButton->setText(bottomLeftX + " , " + bottomLeftY);
+    ui->bottomRightButton->setText(bottomRightX + " , " + bottomRightY);
+    ui->topLeftButton->setText(topLeftX + " , " + topLeftY);
+    ui->topRightButton->setText(topRightX + " , " + topRightY);
+
+    ui->bottomLefrButton->setEnabled(true);
+    ui->bottomRightButton->setEnabled(true);
+    ui->topLeftButton->setEnabled(true);
+    ui->topRightButton->setEnabled(true);
+
+    ui->bottomLefrButton->setGCode("G00 X" + bottomLeftX + " Y" + bottomLeftY + " F2\n");
+    ui->bottomRightButton->setGCode("G00 X" + bottomRightX + " Y" + bottomRightY+ " F2\n");
+    ui->topLeftButton->setGCode("G00 X" + topLeftX + " Y" + topLeftY + " F2\n");
+    ui->topRightButton->setGCode("G00 X" + topRightX + " Y" + topRightY + " F2\n");
+    ui->toZeroPosButton->setGCode("G00 X0 Y0 F2\n");
+
 }
 ///////////////////////////////////////////////////////////////////////////////////
 bool directManageWidget::checkG01FromGLine(){
@@ -238,6 +282,11 @@ void directManageWidget::sendGCodeSlot(){
 void directManageWidget::directMoveButtonSlot(GPushButton *pointer){
     QStringList *code = pointer->getGCode();
     emit sendProgram(code);
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void directManageWidget::rectMoveButtonSlot(GPushButton *pointer){
+    QStringList *code = pointer->getGCode();
+    emit sendGCode(code->at(1));//запускаем только среднюю строку без команд перевода системы координат
 }
 ///////////////////////////////////////////////////////////////////////////////
 

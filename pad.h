@@ -5,7 +5,7 @@
 #include <QStringList>
 #include <cmath>
 #include "apperture.h"
-#include "defines.h"
+
 
 class pad
 {
@@ -15,7 +15,7 @@ public:
     void setX(float value);
     void setY(float value);
     void setApp(apperture *value);
-    QStringList calcGCode(float penDiameter, float force); 
+    QStringList calcGCode(float penDiameter, float force, float moveSpeed, float zOffset);
     float getX() const;
     float getY() const;
 

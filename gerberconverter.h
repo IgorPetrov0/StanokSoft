@@ -8,6 +8,8 @@
 #include <QCoreApplication>
 #include <QMessageBox>
 #include <QVector>
+#include <QRectF>
+#include <cmath>
 #include "stanokobject.h"
 #include "widgets/progressdialor.h"
 #include "apperture.h"
@@ -37,12 +39,15 @@ public:
     void setPenDiameter(float diameter);
     void setForce(float force);
     void setZOffset(float zOffset);
+    void setMoveSpeed(float speed);
     QString getGCode();
     QStringList *getProgramm();
+    void allClear();
+    QRectF getWorkRect();
 
 protected:
     QString KiCadVersion;
-    QStringList gerberCode;
+    QStringList gerberCode;//сырой gepber код
     bool stopFlag;
     progressDialor *progress;
     zeroOmmitt zOmmitt;
@@ -51,11 +56,14 @@ protected:
     float toolDiameter;
     float Zoffset;
     float averageSpeed;
+    float moveSpeed;
     QVector<apperture*> *apperturesArray;
     QVector<pad*> *padsArray;
     QVector<GPath*> *pathsArray;
-    QStringList gProgramm;
+    QStringList gProgramm;//готовая программа в G-кодах
     int currentPosInGProg;
+    QRectF workRect;
+
 
     bool readFile(QFile *file);
     bool parseAsKiCad();
@@ -67,7 +75,6 @@ protected:
     void deletePaths();
     bool makePadsArray();
     bool makePathsArray();
-    void allClear();
     bool readXCoordinate(QString string, float *rez);
     bool readYCoordinate(QString string, float *rez);
     apperture *findApperture(int number);
@@ -77,9 +84,13 @@ protected:
     bool createPathsGCode();
     void connectPaths();
     void convertCoordinates();
+    void findWorkRect();
 
 protected slots:
     void processStopSlot();
+
+signals:
+    void messageSignal(QString message);
 
 
 

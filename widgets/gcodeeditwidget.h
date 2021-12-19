@@ -14,6 +14,7 @@ public:
     bool parseGCode();
     QVector<drawCommand> *getPainterProgramm();
     void setPenDiameter(float diameter);
+    void reset();
 
 protected:
     int currentString;

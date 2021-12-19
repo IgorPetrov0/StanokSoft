@@ -70,15 +70,15 @@ int GPath::getPointsCount(){
     return 0;
 }
 /////////////////////////////////////////////////////////////////////////////////
-QStringList GPath::calcGCode(float penDiameter, float force){
+QStringList GPath::calcGCode(float penDiameter, float force, float moveSpeed, float zOffset){
     QStringList tmpProg;
     //исходим из того, что для рисования дорожек всегда используется круглая аппертура
     if(currentApperture->getType()!=APP_CYCLE){
         return tmpProg;
     }
     int size=pointsArray->size();
-    tmpProg.append("G00 X"+QString::number(pointsArray->at(0)->x())+" Y"+QString::number(pointsArray->at(0)->y())+" F"+QString::number(force)+"\n");//перемещаемся в начало пути
-    tmpProg.append("G00 Z"+QString::number(zMove)+"\n");//опускаем в позицию рисования, делаем точку
+    tmpProg.append("G00 X"+QString::number(pointsArray->at(0)->x())+" Y"+QString::number(pointsArray->at(0)->y())+" F"+QString::number(moveSpeed)+"\n");//перемещаемся в начало пути
+    tmpProg.append("G00 Z"+QString::number(0)+" F"+QString::number(moveSpeed)+"\n");//опускаем в позицию рисования, делаем точку
     for(int n=0;n!=size;n++){//строим центральную линию
         QPointF *point=pointsArray->at(n);
         float X=round(point->x()*10)/10;
@@ -105,7 +105,7 @@ QStringList GPath::calcGCode(float penDiameter, float force){
             tmpProg.append("G01 X"+QString::number(perPoint1.x())+" Y"+QString::number(perPoint1.y())+"\n");//смещаемся в конечную точку
         }
     }
-    tmpProg.append("G00 Z"+QString::number(0)+"\n");
+    tmpProg.append("G00 Z"+QString::number(zOffset)+" F"+QString::number(moveSpeed)+"\n");
     return tmpProg;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////

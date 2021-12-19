@@ -29,11 +29,15 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->DMWidget,SIGNAL(errorSignal(QString)),this,SLOT(errorSlot(QString)));
     connect(ui->DMWidget,SIGNAL(sendProgram(QStringList*)),this,SLOT(sendProgramm(QStringList*)));
     connect(ui->openAction,SIGNAL(triggered(bool)),this,SLOT(openSlot()));
+    connect(ui->penDSpinBox,SIGNAL(valueChanged(double)),this,SLOT(penChangeSlot()));
     connect(ui->ZSpinBox,SIGNAL(valueChanged(double)),this,SLOT(zChangeSlot()));
     connect(ui->FSpinBox,SIGNAL(valueChanged(double)),this,SLOT(fChangeSlot()));
+    connect(ui->FMSpinBox,SIGNAL(valueChanged(double)),this,SLOT(fmChangeSlot()));
     connect(ui->runPushButton,SIGNAL(clicked(bool)),this,SLOT(executeSlot()));
     connect(ui->stopPushButton,SIGNAL(clicked(bool)),this,SLOT(stopSlot()));
     connect(ui->gCodeTextEdit,SIGNAL(updateViewSignal()),this,SLOT(updateViewSlot()));
+    connect(Gconverter,SIGNAL(messageSignal(QString)),this,SLOT(messageSlot(QString)));
+
     distribForms();
 }
 ////////////////////////////////////////////////////////////////////////////////////
@@ -93,8 +97,11 @@ void MainWindow::openSlot(){
             return;
         }
         ui->consoleWidget->addString("Файл " + fileName + " открыт.");
-        ui->gCodeTextEdit->clear();
+        ui->gCodeTextEdit->reset();
         ui->vWidget->clearAll();
+        ui->gCodeTextEdit->reset();
+        Gconverter->allClear();
+
         if(!Gconverter->convertGerberCode(&file)){
             errorSlot(Gconverter->getLastError(),tr("Ошибка преобразования")+file.fileName());
             return;
@@ -109,13 +116,13 @@ void MainWindow::openSlot(){
             return;
         }
         ui->vWidget->drawProgramm(ui->gCodeTextEdit->getPainterProgramm());
-        //ui->vWidget->drawRawData(Gconverter);
+        ui->DMWidget->setWorkRect(Gconverter->getWorkRect());
     }   
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 void MainWindow::penChangeSlot(){
-    Gconverter->setPenDiameter(ui->penComboBox->currentData().toInt());
-    ui->gCodeTextEdit->setPenDiameter(ui->penComboBox->currentData().toFloat());
+    Gconverter->setPenDiameter(ui->penDSpinBox->value());
+    ui->gCodeTextEdit->setPenDiameter(ui->penDSpinBox->value());
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 void MainWindow::zChangeSlot(){
@@ -124,6 +131,10 @@ void MainWindow::zChangeSlot(){
 //////////////////////////////////////////////////////////////////////////////////////////////////
 void MainWindow::fChangeSlot(){
     Gconverter->setForce(ui->FSpinBox->value());
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////
+void MainWindow::fmChangeSlot(){
+    Gconverter->setMoveSpeed(ui->FMSpinBox->value());
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////
 void MainWindow::executeSlot(){
@@ -164,19 +175,8 @@ void MainWindow::messageSlot(QString message){
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////
 void MainWindow::distribForms(){
-    int size=penDiametersArray.size();
-    disconnect(ui->penComboBox,SIGNAL(currentIndexChanged(int)),this,SLOT(penChangeSlot()));
-    for(int n=0;n!=size;n++){
-        ui->penComboBox->addItem(QString::number(penDiametersArray.at(n)));
-        ui->penComboBox->setItemData(n,penDiametersArray.at(n));
-    }
-    ui->penComboBox->addItem(tr("Управление."));
-    connect(ui->penComboBox,SIGNAL(currentIndexChanged(int)),this,SLOT(penChangeSlot()));
-    ui->penComboBox->setCurrentIndex(0);
-    penChangeSlot();
-    ui->ZSpinBox->setValue(1);
-    ui->FSpinBox->setValue(2);
-    Gconverter->setForce(2);
-    Gconverter->setZOffset(1);
-    Gconverter->setPenDiameter(1);
+    ui->penDSpinBox->setValue(1);
+    ui->ZSpinBox->setValue(-10);
+    ui->FSpinBox->setValue(0.5);
+    ui->FMSpinBox->setValue(2);
 }

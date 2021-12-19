@@ -17,7 +17,8 @@ public:
     explicit directManageWidget(QWidget *parent = nullptr);
     ~directManageWidget();
     void setPlotterStatus(plotterStatus status);
-    setSwitchStatus(bool X,bool Y,bool Z);
+    void setSwitchStatus(bool X,bool Y,bool Z);
+    void setWorkRect(QRectF rect);
 
 protected:
     bool error;
@@ -36,7 +37,8 @@ protected slots:
     void setZeroSlot();
     void diableSteppersSlot();
     void sendGCodeSlot();
-    void directMoveButtonSlot(GPushButton*pointer);
+    void directMoveButtonSlot(GPushButton *pointer);
+    void rectMoveButtonSlot(GPushButton *pointer);
 
 
 

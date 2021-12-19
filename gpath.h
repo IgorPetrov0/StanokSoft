@@ -7,7 +7,6 @@
 #include <QVector2D>
 #include <cmath>
 #include "apperture.h"
-#include "defines.h"
 
 class GPath //путь - это траектория, состоящия из точек,
         //которые проходятся непрерывно одна за другой и
@@ -22,7 +21,7 @@ public:
     QPointF *startPoint();
     QPointF *endtPoint();
     int getPointsCount();
-    QStringList calcGCode(float penDiameter, float force);
+    QStringList calcGCode(float penDiameter, float force, float moveSpeed, float zOffset);
     bool isValide();
     bool isApperture();
     float appertureSize();

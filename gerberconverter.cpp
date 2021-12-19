@@ -13,6 +13,8 @@ gerberConverter::gerberConverter(QWidget *parent):
     connect(progress,SIGNAL(cancelSignal()),this,SLOT(processStopSlot()));
     toolDiameter=-1;
     Zoffset=0;
+    averageSpeed=0;
+    moveSpeed=0;
     zOmmitt=ZERO_NO_OMMITT;
     currentPosInGProg=0;
 }
@@ -100,7 +102,8 @@ bool gerberConverter::parseAsKiCad(){
     if(!createPathsGCode()){//рассчитываем дорожки и заполняем программу
         return false;
     }
-
+    findWorkRect();
+    gerberCode.clear();//очищаем
     return true;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -234,7 +237,6 @@ bool gerberConverter::makePadsArray(){
     int currApperture=0;
     bool ok=false;
     int tmp1=0;
-    int tmp2=0;
     float tmpFloat=0;
     QString tmpStr;
 
@@ -407,6 +409,11 @@ void gerberConverter::allClear(){
     deletePads();
     deletePaths();
     gerberCode.clear();
+    gProgramm.clear();
+}
+////////////////////////////////////////////////////////////////////////////////////////////
+QRectF gerberConverter::getWorkRect(){
+    return workRect;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////
 bool gerberConverter::readYCoordinate(QString string, float *rez){
@@ -470,10 +477,7 @@ apperture *gerberConverter::findApperture(int number){
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 void gerberConverter::initGProgram(){
-    gProgramm.append("G01 Z0 F2\n");
-    gProgramm.append("G01 X0 Y0\n");
-    currentPosInGProg=2;
-    gProgramm.append("G01 Z0\n");
+    currentPosInGProg=0;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 void gerberConverter::addGCommand(QString command){
@@ -496,7 +500,7 @@ bool gerberConverter::createPadsGCode(){
         int size=padsArray->size();
 
         for(int n=0;n!=size;n++){
-            subProgr=padsArray->at(n)->calcGCode(toolDiameter,averageSpeed);
+            subProgr=padsArray->at(n)->calcGCode(toolDiameter,averageSpeed,moveSpeed,Zoffset);
             if(subProgr.isEmpty()){
                 lastError=tr("Ошибка при формировании G-кода площадки.");
                 return false;
@@ -525,7 +529,7 @@ bool gerberConverter::createPathsGCode(){
         int size=pathsArray->size();
 
         for(int n=0;n!=size;n++){
-            subProgr=pathsArray->at(n)->calcGCode(toolDiameter,averageSpeed);
+            subProgr=pathsArray->at(n)->calcGCode(toolDiameter,averageSpeed,moveSpeed,Zoffset);
             if(subProgr.isEmpty()){
                 lastError=tr("Ошибка при формировании G-кода дорожки.");
                 return false;
@@ -578,19 +582,105 @@ void gerberConverter::connectPaths(){
 void gerberConverter::convertCoordinates(){
     //пересчитываем координаты из системы координат редактора в систему координат станка.
     //за 0 принимаем координаты первой площадки в списке
+    float coordX = 0;
+    float coordY = 0;
 
-    float coordX = padsArray->at(0)->getX();
-    float coordY = padsArray->at(0)->getY();
-
-    foreach(pad *nextPad, *padsArray){
-        nextPad->setX(nextPad->getX() - coordX);
-        nextPad->setY(nextPad->getY() - coordY);
+    if(padsArray != nullptr){//если есть площадки
+        //за 0 принимаем координаты первой площадки в списке
+        coordX = padsArray->at(0)->getX();
+        coordY = padsArray->at(0)->getY();
+    }
+    else if(pathsArray != nullptr){//если нет площадок, то за 0 принимаем первую точку первого пути
+        coordX = pathsArray->at(0)->getPoint(0)->x();
+        coordY = pathsArray->at(0)->getPoint(0)->y();
+    }
+    else{
+        emit messageSignal("В файле отсутствуют пути и площадки.");
+        return;
     }
 
-    foreach(GPath *nextPath, *pathsArray){
-        nextPath->convertCoordinates(coordX, coordY);
+    if(padsArray != nullptr){
+        foreach(pad *nextPad, *padsArray){
+            nextPad->setX(nextPad->getX() - coordX);
+            nextPad->setY(nextPad->getY() - coordY);
+        }
     }
 
+    if(pathsArray != nullptr){
+        foreach(GPath *nextPath, *pathsArray){
+            nextPath->convertCoordinates(coordX, coordY);
+        }
+    }
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+void gerberConverter::findWorkRect(){
+    //ищем рабочий квадрат
+    float minX = 0;
+    float maxX = 0;
+    float maxY = 0;
+    float minY = 0;
+
+    for(int n = 0; n!=gProgramm.size(); n++){
+        int pos1 = -1;
+        int pos2 = -1;
+        QString string = gProgramm.at(n);
+
+        //ищем максимальную и минимальную Х
+        pos1 = string.indexOf("X");
+        if(pos1 != -1){
+            pos2 = string.indexOf(" ",pos1 + 1);
+            if(pos2 == -1){
+                pos2 = string.indexOf("\n",pos1 + 1);
+                if(pos2 == -1){
+                    emit messageSignal("Ошибка в программе. Строка " + QString::number(n));
+                    return;
+                }
+            }
+            QString tmp = string.mid(pos1 + 1,pos2 - pos1 - 1);
+            bool ok = false;
+            float value = round(tmp.toFloat(&ok)*10)/10;
+            if(!ok){
+                emit messageSignal("Ошибка в программе. Строка " + QString::number(n));
+                return;
+            }
+            if(value > maxX){
+                maxX = value;
+            }
+            else if(value < minX){
+                minX = value;
+            }
+        }
+
+        //ищем максимальную и минимальную Y
+        pos1 = string.indexOf("Y");
+        if(pos1 != -1){
+            pos2 = string.indexOf(" ",pos1+1);
+            if(pos2 == -1){
+                pos2 = string.indexOf("\n",pos1+1);
+                if(pos2 == -1){
+                    emit messageSignal("Ошибка в программе. Строка " + QString::number(n));
+                    return;
+                }
+            }
+            QString tmp = string.mid(pos1 + 1,pos2 - pos1 - 1);
+            bool ok = false;
+            float value = round(tmp.toFloat(&ok)*10)/10;
+            if(!ok){
+                emit messageSignal("Ошибка в программе. Строка " + QString::number(n));
+                return;
+            }
+            if(value > maxY){
+                maxY = value;
+            }
+            else if(value < minY){
+                minY = value;
+            }
+        }
+    }
+    workRect.setRight(maxX);
+    workRect.setLeft(minX);
+    workRect.setTop(maxY);
+    workRect.setBottom(minY);
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 QVector<pad *> *gerberConverter::getPadsArray() const{
@@ -611,6 +701,10 @@ void gerberConverter::setForce(float force){
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 void gerberConverter::setZOffset(float zOffset){
     Zoffset=zOffset;
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+void gerberConverter::setMoveSpeed(float speed){
+    moveSpeed = speed;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 QString gerberConverter::getGCode(){

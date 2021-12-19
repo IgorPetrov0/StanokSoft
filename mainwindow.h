@@ -30,6 +30,7 @@ protected slots:
     void penChangeSlot();
     void zChangeSlot();
     void fChangeSlot();
+    void fmChangeSlot();
     void executeSlot();
     void updateViewSlot();
     void errorSlot(QString error, QString title = NULL);

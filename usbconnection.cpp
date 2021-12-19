@@ -226,6 +226,9 @@ bool usbConnection::writeCurrentPortInFile(){
 void usbConnection::sendNextComand(){
     if(runing){
         if(programCounter < programPointer->size()){
+            if(programPointer->at(programCounter) == "G01 X8 Y0.4\n"){
+                int t=0;
+            }
             sendGCode(programPointer->at(programCounter));
             programCounter++;
         }

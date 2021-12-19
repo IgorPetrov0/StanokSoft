@@ -45,6 +45,12 @@ QVector<drawCommand> *gCodeEditWidget::getPainterProgramm(){
 void gCodeEditWidget::setPenDiameter(float diameter){
     parser.setPenDiameter(diameter);
 }
+///////////////////////////////////////////////////////////////////////////////////
+void gCodeEditWidget::reset(){
+    this->clear();
+    parser.reset();
+    currentString = 0;
+}
 //////////////////////////////////////////////////////////////////////////////////
 void gCodeEditWidget::textChangedSlot(){
     this->cursor().setPos(0,0);
