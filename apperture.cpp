@@ -55,33 +55,6 @@ bool apperture::readApperture(QString string){
     return readData(string.remove(0,tmp1+1));
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
-QString apperture::calcPadGCode(float toolDiam, float X, float Y){
-    if(toolDiam<=0){
-        return QString();
-    }
-    switch(type){
-        case(APP_CYCLE):{
-
-            break;
-        }
-        case(APP_OVAL):{
-
-            break;
-        }
-        case(APP_RECT):{
-
-            break;
-        }
-        case(APP_UNDEFINED):{
-            return QString();
-            break;
-        }
-    }
-
-
-
-}
-/////////////////////////////////////////////////////////////////////////////////////////////
 int apperture::getNumber() const{
     return number;
 }
@@ -120,6 +93,9 @@ bool apperture::isInApperture(QPointF *point1, QPointF *point2){
             return false;
             break;
         }
+        default:{
+            return false;
+        }
     }
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -141,6 +117,9 @@ bool apperture::readData(QString string){
         }
         case(APP_RECT):{
             return readXY(string);
+        }
+        case(APP_UNDEFINED):{
+            return false;
         }
     }
     return true;

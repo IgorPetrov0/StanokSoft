@@ -26,7 +26,6 @@ public:
     float getXSize();
     float getYSize();
     bool readApperture(QString string);
-    QString calcPadGCode(float toolDiam, float X, float Y);
     int getNumber() const;
     bool isInApperture(QPointF *point1, QPointF *point2);
 

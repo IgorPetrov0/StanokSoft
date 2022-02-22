@@ -148,7 +148,7 @@ void MainWindow::updateViewSlot(){
 void MainWindow::errorSlot(QString error, QString title){
     QMessageBox box(this);
     box.setIcon(QMessageBox::Critical);
-    if(title != NULL){
+    if(title != nullptr){
         box.setWindowTitle(title);
     }
     else{

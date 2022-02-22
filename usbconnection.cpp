@@ -51,6 +51,7 @@ bool usbConnection::connectPort(){
                 return true;
             }
             else{
+                QString error = currentPort->errorString();
                 message(tr("Невозможно открыть порт")+currentPort->portName()+"\n"+
                         currentPort->errorString());
             }
@@ -76,7 +77,8 @@ void usbConnection::sendGCode(QString gCode){
             statusTimer.stop();//на время выполнения команды статус не запрашиваем
             QByteArray outArray(4,0);
             outArray[1]=MESSAGE_G_CODE;
-            outArray.append(gCode);
+            QByteArray stringArray = gCode.toLatin1();
+            outArray.append(stringArray);
             writeArray(&outArray);
             return;
         }
